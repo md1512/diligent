@@ -20,7 +20,15 @@ MainWindow::MainWindow(QWidget *parent) :  QMainWindow(parent), ui(new Ui::MainW
   connect(ui->actionNew_Tab, SIGNAL(triggered(bool)), this, SLOT(createNewTab()) );
   connect(ui->actionClose, SIGNAL(triggered(bool)), this, SLOT(realClose()) );
   ui->tabWidget->clear();
-  createNewTab();
+  //Now create any tabs as needed
+  QSettings settings;
+    QStringList lasttabs = settings.value("teams_lastopen").toStringList();
+  if(lasttabs.isEmpty()){ createNewTab(); }
+  else{
+    for(int i=0; i<lasttabs.length(); i++){
+      createWebView(lasttabs[i]);
+    }
+  }
     //createWebView();
     //setUrl();
     createActions();
@@ -167,6 +175,14 @@ void MainWindow::saveSettings()
     settings.setValue("mainwindow/geometry", saveGeometry());
     settings.setValue("mainwindow/windowState", saveState());
     settings.setValue("mainwindow/hideonclose", hideOnClose);
+    //Now save which tabs are open right now for re-opening on next run
+    QStringList lasttabs;
+    for(int i=0; i<ui->tabWidget->count(); i++){
+      if(ui->tabWidget->widget(i)->whatsThis().isEmpty()){
+        lasttabs << ui->tabWidget->tabText(i);
+      }
+    }
+     settings.setValue("teams_lastopen", lasttabs);
 }
 
 void MainWindow::closeEvent(QCloseEvent *event)
