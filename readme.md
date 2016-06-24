@@ -1,7 +1,7 @@
-# TeamWords
+# Diligent
 
-TeamWords is unofficial cross-platform desktop client for Slack.
-TeamWords is not created by, affiliated with, or supported by Slack Technologies, Inc.
+Diligent is unofficial cross-platform desktop client for Slack, forked from TeamWords
+Diligent is not created by, affiliated with, or supported by Slack Technologies, Inc.
 
 ## Features
 
@@ -10,11 +10,8 @@ TeamWords is not created by, affiliated with, or supported by Slack Technologies
 * Open all external links with default system browser
 * Supports Drag'n'Drop
 * Glows taskbar icon when some notification received
+* Support for multiple Slack projects via Tabs
 
 ## License
 
-TeamWords project use LGPL v3.0 license for code.
-
-## Slack released Windows version of their software:
-
-![Download links](http://i.imgur.com/MPpI7zS.png)
+Diligent is licesnsed under LGPL v3.0
