@@ -20,7 +20,7 @@ win32 {
     QT += winextras
 }
 
-TARGET = teamwords
+TARGET = diligent
 TEMPLATE = app
 CONFIG += c++11
 

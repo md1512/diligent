@@ -3,9 +3,9 @@
 MainApplication::MainApplication(int &argc, char **argv)
     : QApplication(argc, argv)
 {
-    QCoreApplication::setOrganizationName("MiT-Ufa");
-    QCoreApplication::setOrganizationDomain("mit-ufa.com");
-    QCoreApplication::setApplicationName("TeamWords");
+    QCoreApplication::setOrganizationName("diligent");
+    QCoreApplication::setOrganizationDomain("diligent");
+    QCoreApplication::setApplicationName("Diligent");
 }
 
 void MainApplication::setMainWindow(MainWindow *window)
@@ -31,4 +31,3 @@ void MainApplication::showNotification(QString title, QString message)
 MainApplication::~MainApplication()
 {
 }
-

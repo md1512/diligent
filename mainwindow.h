@@ -22,6 +22,10 @@
 class CookieJar;
 class NetworkAccessManager;
 
+namespace Ui{
+	class MainWindow;
+};
+
 class MainWindow : public QMainWindow
 {
         Q_OBJECT
@@ -39,14 +43,12 @@ class MainWindow : public QMainWindow
 
 
     public slots:
-        void featureRequest(QWebFrame *frame, QWebPage::Feature feature);
         void trayActivated(QSystemTrayIcon::ActivationReason reason);
-        void onUrlChanged(QUrl url);
         void hideOnCloseChanged(bool value);
         void realClose();
 
     private:
-        WebView *webView;
+	Ui::MainWindow *ui;
         AsemanNativeNotification *notification;
         bool hideOnClose;
         bool userWantsToClose;
@@ -66,10 +68,13 @@ class MainWindow : public QMainWindow
         void createActions();
         void createTray();
         void setIcons();
-        void setUrl();
-        void createWebView();
         void readSettings();
         void saveSettings();
+
+private slots:
+ 	void createNewTab();
+	void closeTab(int);
+        void createWebView(QString team);
 };
 
 #endif // MAINWINDOW_H

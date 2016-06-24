@@ -23,6 +23,10 @@ class WebView : public QWebView
 
         CookieJar *cookieJar;
         QUrl lastUrl;
+
+    private slots:
+	void onUrlChanged(QUrl);
+	void featureRequest(QWebFrame *frame, QWebPage::Feature feature);
 };
 
 #endif // WEBVIEW_H

@@ -1,4 +1,5 @@
 #include "mainwindow.h"
+#include "ui_mainwindow.h"
 
 #include <QStandardPaths>
 #include <QWebPage>
@@ -10,11 +11,18 @@
 #include <QMessageBox>
 #include <QVBoxLayout>
 
-MainWindow::MainWindow(QWidget *parent) :
-    QMainWindow(parent)
+#include "teamform.h"
+
+MainWindow::MainWindow(QWidget *parent) :  QMainWindow(parent), ui(new Ui::MainWindow)
 {
-    createWebView();
-    setUrl();
+  ui->setupUi(this);
+  connect(ui->tabWidget, SIGNAL(tabCloseRequested(int)), this, SLOT(closeTab(int)) );
+  connect(ui->actionNew_Tab, SIGNAL(triggered(bool)), this, SLOT(createNewTab()) );
+  connect(ui->actionClose, SIGNAL(triggered(bool)), this, SLOT(realClose()) );
+  ui->tabWidget->clear();
+  createNewTab();
+    //createWebView();
+    //setUrl();
     createActions();
     createTray();
     setIcons();
@@ -44,18 +52,36 @@ void MainWindow::readSettings()
     hideOnCloseAction->setChecked(hideOnClose);
 }
 
-void MainWindow::createWebView()
+void MainWindow::createNewTab(){
+  TeamForm *teamform = new TeamForm(this);
+  teamform->setWhatsThis("selector");
+  connect(teamform, SIGNAL(openTeam(QString)), this, SLOT(createWebView(QString)) );
+  int index =  ui->tabWidget->addTab(teamform, tr("Select Team"));
+  ui->tabWidget->setCurrentIndex(index);
+}
+
+void MainWindow::closeTab(int tab){
+  QWidget *widget =ui-> tabWidget->widget(tab);
+  if(widget==0){ return; }
+ ui-> tabWidget->removeTab(tab);
+  widget->deleteLater();
+}
+
+void MainWindow::createWebView(QString team)
 {
-    webView = new WebView(this);
-    QWidget *centralWidget = new QWidget(this);
-    QVBoxLayout *layout = new QVBoxLayout(centralWidget);
-    layout->setContentsMargins(0, 0, 0, 0);
-    layout->addWidget(webView);
-    centralWidget->setLayout(layout);
-    setCentralWidget(centralWidget);
-    connect(webView->page(), SIGNAL(featurePermissionRequested(QWebFrame *, QWebPage::Feature)),
-            this, SLOT(featureRequest(QWebFrame *, QWebPage::Feature)));
-    connect(webView, SIGNAL(urlChanged(QUrl)), this, SLOT(onUrlChanged(QUrl)));
+  //Get the current tab first
+  QWidget *cur = ui->tabWidget->currentWidget();
+    if(cur!=0){
+      //ensure the current widget  was the selector
+      if(cur->whatsThis()=="selector"){ 
+        ui->tabWidget->removeTab(ui->tabWidget->currentIndex());
+        cur->deleteLater();
+      }
+    }
+    WebView *webView = new WebView(this);
+    int index =ui-> tabWidget->addTab(webView, team);
+    ui->tabWidget->setCurrentIndex(index);
+    webView->setUrl( QUrl(teamLoginUrl.arg(team) ) );
 }
 
 void MainWindow::createTray()
@@ -77,32 +103,6 @@ void MainWindow::setIcons()
     setWindowIcon(QIcon(QString("://images/png/icon32.png")));
 }
 
-void MainWindow::setUrl()
-{
-    QSettings settings;
-    QVariant value = settings.value("team_domain");
-    QUrl url(loginUrl);
-
-    if (value.isValid())
-    {
-        url = QUrl(teamLoginUrl.arg(value.toString()));
-    }
-
-    qDebug() << "Team login URL: " << url;
-    webView->setUrl(url);
-}
-
-void MainWindow::onUrlChanged(QUrl url)
-{
-    qDebug() << url.host();
-
-    if (url.host().endsWith(".slack.com", Qt::CaseSensitive))
-    {
-        webView->page()->setFeaturePermission(webView->page()->mainFrame(), QWebPage::Feature::Notifications,
-                                              QWebPage::PermissionPolicy::PermissionGrantedByUser);
-    }
-}
-
 void MainWindow::hideOnCloseChanged(bool value)
 {
     hideOnClose = value;
@@ -114,25 +114,6 @@ void MainWindow::realClose()
 {
     userWantsToClose = true;
     close();
-}
-
-void MainWindow::featureRequest(QWebFrame *frame, QWebPage::Feature feature)
-{
-    qDebug() << frame->url();
-
-    if (feature == QWebPage::Feature::Notifications)
-    {
-        int result = QMessageBox::question(this,
-                                           QString("Notification permission"),
-                                           QString("%1\nasks for notifications persmission. Should I allow?").arg(frame->url().toString()),
-                                           QMessageBox::StandardButton::Ok, QMessageBox::Cancel);
-
-        if (result == QMessageBox::StandardButton::Ok)
-        {
-            webView->page()->setFeaturePermission(frame, feature,
-                                                  QWebPage::PermissionPolicy::PermissionGrantedByUser);
-        }
-    }
 }
 
 void MainWindow::trayActivated(QSystemTrayIcon::ActivationReason reason)

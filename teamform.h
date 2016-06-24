@@ -17,11 +17,16 @@ class TeamForm : public QWidget
         ~TeamForm();
 
     private slots:
-        void onTextChanged(QString text);
+        void onTextChanged();
         void onClick();
 
     private:
         Ui::TeamForm *ui;
+
+	QString getTeamSelection();
+
+    signals:
+	void openTeam(QString); //team domain
 };
 
 #endif // TEAMFORM_H
