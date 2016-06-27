@@ -16,9 +16,11 @@
 MainWindow::MainWindow(QWidget *parent) :  QMainWindow(parent), ui(new Ui::MainWindow)
 {
   ui->setupUi(this);
+  userWantsToClose = false;
   connect(ui->tabWidget, SIGNAL(tabCloseRequested(int)), this, SLOT(closeTab(int)) );
   connect(ui->actionNew_Tab, SIGNAL(triggered(bool)), this, SLOT(createNewTab()) );
   connect(ui->actionClose, SIGNAL(triggered(bool)), this, SLOT(realClose()) );
+  connect(ui->actionHide_To_Tray, SIGNAL(triggered(bool)), this, SLOT(hide()) );
   ui->tabWidget->clear();
   //Now create any tabs as needed
   QSettings settings;
@@ -29,8 +31,6 @@ MainWindow::MainWindow(QWidget *parent) :  QMainWindow(parent), ui(new Ui::MainW
       createWebView(lasttabs[i]);
     }
   }
-    //createWebView();
-    //setUrl();
     createActions();
     createTray();
     setIcons();
@@ -39,7 +39,7 @@ MainWindow::MainWindow(QWidget *parent) :  QMainWindow(parent), ui(new Ui::MainW
     button->setWindow(this->windowHandle());
     button->setOverlayIcon(QIcon("://images/png/Slack.png"));
 #endif
-    notification = new AsemanNativeNotification(this);
+    //notification = new AsemanNativeNotification(this);
     readSettings();
 }
 
@@ -126,20 +126,15 @@ void MainWindow::realClose()
 
 void MainWindow::trayActivated(QSystemTrayIcon::ActivationReason reason)
 {
-    switch (reason)
-    {
-    case QSystemTrayIcon::Trigger:
-    {
-        if (isHidden())
-            show();
-        else
-            hide();
-
+    switch (reason){
+      case QSystemTrayIcon::Trigger:
+        if (isHidden()){  this->showNormal(); }
+        else{ hide(); }
         break;
-    }
-
-    default:
-        break;
+      case QSystemTrayIcon::Context:
+	break; //do nothing here - context menu will popup from another signal
+      default:
+        this->showNormal();;
     }
 }
 
@@ -155,7 +150,9 @@ void MainWindow::createActions()
 
 void MainWindow::showNotification(QString title, QString message)
 {
-    notification->sendNotify(title, message, "://images/png/Slack.png", 0, 100000);
+    qDebug() << "Got notification:" << title << message;
+    //notification->sendNotify(title, message, "://images/png/Slack.png", 0, 100000);
+    trayIcon->showMessage(title, message, QSystemTrayIcon::NoIcon, 100000);
     QApplication::alert(this);
 }
 
@@ -187,23 +184,17 @@ void MainWindow::saveSettings()
 
 void MainWindow::closeEvent(QCloseEvent *event)
 {
-    if (hideOnClose)
-    {
-        if (userWantsToClose)
-        {
+    if (hideOnClose){
+        if (userWantsToClose){
             saveSettings();
             trayIcon->hide();
             QMainWindow::closeEvent(event);
-        }
-        else
-        {
+        }else{
             qDebug() << "User doesn't want to close";
             event->ignore();
             QMainWindow::hide();
         }
-    }
-    else
-    {
+    }else{
         saveSettings();
         trayIcon->hide();
         QMainWindow::closeEvent(event);

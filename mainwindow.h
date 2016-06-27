@@ -10,7 +10,7 @@
 #include "qwebkitplatformplugin.h"
 #include "cookiejar.h"
 #include "webview.h"
-#include "asemantools/asemannativenotification.h"
+//#include "asemantools/asemannativenotification.h"
 
 #ifdef Q_OS_WIN32
 #include <QWinTaskbarButton>
@@ -49,7 +49,7 @@ class MainWindow : public QMainWindow
 
     private:
 	Ui::MainWindow *ui;
-        AsemanNativeNotification *notification;
+        //AsemanNativeNotification *notification;
         bool hideOnClose;
         bool userWantsToClose;
 

@@ -50,6 +50,7 @@
     </property>
     <addaction name="actionNew_Tab"/>
     <addaction name="separator"/>
+    <addaction name="actionHide_To_Tray"/>
     <addaction name="actionClose"/>
    </widget>
    <addaction name="menuFile"/>
@@ -75,7 +76,12 @@
      <normaloff>.</normaloff>.</iconset>
    </property>
    <property name="text">
-    <string>Close</string>
+    <string>Close Diligent</string>
+   </property>
+  </action>
+  <action name="actionHide_To_Tray">
+   <property name="text">
+    <string>Hide To Tray</string>
    </property>
   </action>
  </widget>

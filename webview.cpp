@@ -45,7 +45,7 @@ void WebView::setStoragePath()
 {
     QString path(QStandardPaths::writableLocation(QStandardPaths::CacheLocation));
     qDebug() << "Cache path" << path;
-    storagePath = path;
+    storagePath = path+".cache";
     page()->settings()->enablePersistentStorage(storagePath);
 }
 

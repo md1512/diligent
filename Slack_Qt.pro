@@ -24,7 +24,7 @@ TARGET = diligent
 TEMPLATE = app
 CONFIG += c++11
 
-include(asemantools/asemantools.pri)
+#include(asemantools/asemantools.pri)
 include(plugins/qtwebkit/qtwebkit-plugins.pri)
 
 SOURCES += main.cpp\
