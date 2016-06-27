@@ -8,12 +8,6 @@ WebView::WebView(QWidget *parent, CookieJar *cookieJar) :
     QWebView(parent),
     cookieJar(cookieJar)
 {
-    WebPage *page = new WebPage();
-    page->setView(this);
-    connect(page, SIGNAL(urlChanged(QUrl)), this, SLOT(onUrlChanged(QUrl)));
-    connect(page, SIGNAL(featurePermissionRequested(QWebFrame *, QWebPage::Feature)),
-            this, SLOT(featureRequest(QWebFrame *, QWebPage::Feature)));
-    this->setPage(page);
     settings()->setAttribute(QWebSettings::JavascriptEnabled, true);
     settings()->setAttribute(QWebSettings::JavascriptCanOpenWindows, true);
     settings()->setAttribute(QWebSettings::JavascriptCanAccessClipboard, true);
@@ -22,6 +16,13 @@ WebView::WebView(QWidget *parent, CookieJar *cookieJar) :
     settings()->setThirdPartyCookiePolicy(QWebSettings::ThirdPartyCookiePolicy::AlwaysAllowThirdPartyCookies);
     settings()->setFontFamily(QWebSettings::StandardFont, "Segoe UI");
     settings()->setFontSize(QWebSettings::DefaultFontSize, 16);
+    WebPage *page = new WebPage();
+    page->setView(this);
+    connect(page, SIGNAL(urlChanged(QUrl)), this, SLOT(onUrlChanged(QUrl)));
+    connect(page, SIGNAL(featurePermissionRequested(QWebFrame *, QWebPage::Feature)),
+            this, SLOT(featureRequest(QWebFrame *, QWebPage::Feature)));
+    this->setPage(page);
+
     setContextMenuPolicy(Qt::ContextMenuPolicy::PreventContextMenu);
     setStoragePath();
     setCookies();
