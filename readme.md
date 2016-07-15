@@ -1,6 +1,6 @@
 # Diligent
 
-Diligent is unofficial cross-platform desktop client for Slack, forked from TeamWords.
+Diligent is an unofficial cross-platform desktop client for Slack, forked from TeamWords.
 Diligent is not created by, affiliated with, or supported by Slack Technologies, Inc.
 
 ## Features
