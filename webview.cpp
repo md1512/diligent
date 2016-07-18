@@ -18,7 +18,7 @@ WebView::WebView(QWidget *parent, CookieJar *cookieJar) :
     settings()->setFontSize(QWebSettings::DefaultFontSize, 16);
     WebPage *page = new WebPage();
     page->setView(this);
-    connect(page, SIGNAL(urlChanged(QUrl)), this, SLOT(onUrlChanged(QUrl)));
+    //connect(page, SIGNAL(urlChanged(const QUrl&)), this, SLOT(onUrlChanged(QUrl)));
     connect(page, SIGNAL(featurePermissionRequested(QWebFrame *, QWebPage::Feature)),
             this, SLOT(featureRequest(QWebFrame *, QWebPage::Feature)));
     this->setPage(page);
