@@ -3,6 +3,9 @@
 #include <QStandardPaths>
 #include <QMessageBox>
 #include <QWebFrame>
+#include <QApplication>
+#include <QDesktopWidget>
+#include <QScreen>
 
 WebView::WebView(QWidget *parent, CookieJar *cookieJar) :
     QWebView(parent),
@@ -22,7 +25,7 @@ WebView::WebView(QWidget *parent, CookieJar *cookieJar) :
     connect(page, SIGNAL(featurePermissionRequested(QWebFrame *, QWebPage::Feature)),
             this, SLOT(featureRequest(QWebFrame *, QWebPage::Feature)));
     this->setPage(page);
-
+    this->setZoomFactor( QApplication::desktop()->screen()->logicalDpiX()/96.0 );
     setContextMenuPolicy(Qt::ContextMenuPolicy::PreventContextMenu);
     setStoragePath();
     setCookies();
