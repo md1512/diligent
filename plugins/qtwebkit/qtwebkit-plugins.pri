@@ -53,6 +53,5 @@ equals(buildNotifications, true) {
     SOURCES += $$PWD/notifications/notificationpresenter.cpp
 }
 
-INCLUDEPATH += $$top_srcdir
-HEADERS += $$top_srcdir/mainapplication.h
-
+INCLUDEPATH *= $$top_srcdir
+HEADERS *= $$top_srcdir/mainapplication.h
