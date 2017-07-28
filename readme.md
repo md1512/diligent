@@ -14,4 +14,4 @@ Diligent is not created by, affiliated with, or supported by Slack Technologies,
 
 ## License
 
-Diligent is licesnsed under LGPL v3.0
+Diligent is licensed under LGPL v3.0
